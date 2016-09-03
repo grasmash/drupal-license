@@ -1,0 +1,14 @@
+{
+  "name": "drupal/license",
+  "type": "drupal-module",
+  "description": "Provides license entity type, which may be used to control user access to other entities.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/license",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/license",
+    "source": "http://cgit.drupalcode.org/license"
+  },
+  "require": { }
+}
