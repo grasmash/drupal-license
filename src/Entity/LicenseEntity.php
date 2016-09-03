@@ -163,8 +163,8 @@ class LicenseEntity extends ContentEntityBase implements LicenseEntityInterface 
     $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Authored by'))
-      ->setDescription(t('The user ID of author of the License entity entity.'))
+      ->setLabel(t('Owner'))
+      ->setDescription(t('The user ID of author of license owner.'))
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
