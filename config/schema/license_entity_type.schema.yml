@@ -10,3 +10,12 @@ license.license_entity_type.*:
       label: 'Label'
     uuid:
       type: string
+    status:
+      type: int
+      label: 'Status'
+    expires:
+      type: int
+      label: 'Expiry'
+    expires_automatically:
+      type: int
+      label: 'Expires automatically'

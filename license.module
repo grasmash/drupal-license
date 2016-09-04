@@ -6,6 +6,16 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Entity\EntityTypeInterface;
+
+// License statuses.
+define('LICENSE_CREATED', 0);
+define('LICENSE_PENDING', 1);
+define('LICENSE_ACTIVE', 2);
+define('LICENSE_EXPIRED', 3);
+define('LICENSE_SUSPENDED', 5);
+define('LICENSE_REVOKED', 4);
 
 /**
  * Implements hook_help().

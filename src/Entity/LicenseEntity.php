@@ -162,6 +162,27 @@ class LicenseEntity extends ContentEntityBase implements LicenseEntityInterface 
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
+    $fields['name'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Name'))
+      ->setDescription(t('The name of the License entity entity.'))
+      ->setSettings(array(
+        'max_length' => 50,
+        'text_processing' => 0,
+      ))
+      ->setRequired(TRUE)
+      ->setDefaultValue('')
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => 0,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'string_textfield',
+        'weight' => 0,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Owner'))
       ->setDescription(t('The user ID of author of license owner.'))
@@ -169,14 +190,15 @@ class LicenseEntity extends ContentEntityBase implements LicenseEntityInterface 
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
       ->setTranslatable(TRUE)
+      ->setRequired(TRUE)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'author',
-        'weight' => 0,
+        'weight' => 1,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'entity_reference_autocomplete',
-        'weight' => 5,
+        'weight' => 1,
         'settings' => array(
           'match_operator' => 'CONTAINS',
           'size' => '60',
@@ -187,30 +209,81 @@ class LicenseEntity extends ContentEntityBase implements LicenseEntityInterface 
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Name'))
-      ->setDescription(t('The name of the License entity entity.'))
-      ->setSettings(array(
-        'max_length' => 50,
-        'text_processing' => 0,
-      ))
-      ->setDefaultValue('')
-      ->setDisplayOptions('view', array(
-        'label' => 'above',
-        'type' => 'string',
-        'weight' => -4,
-      ))
+    $fields['status'] = BaseFieldDefinition::create('list_integer')
+      ->setLabel(t('Status'))
+      ->setDescription(t('The license status.'))
+      ->setDefaultValue(LICENSE_CREATED)
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('form', array(
-        'type' => 'string_textfield',
-        'weight' => -4,
+        'type' => 'options_select',
+        'weight' => 2,
+      ))
+      ->setRequired(TRUE)
+      ->setSetting('allowed_values', [
+        LICENSE_CREATED => t('Created'),
+        LICENSE_PENDING => t('Pending'),
+        LICENSE_ACTIVE => t('Active'),
+        LICENSE_EXPIRED => t('Expired'),
+        LICENSE_SUSPENDED => t('Suspended'),
+        LICENSE_REVOKED => t('Revoked'),
+      ]);
+
+    $fields['expires_automatically'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Expires automatically'))
+      ->setDescription(t('If true, the license will expire automatically at the expiry date and time.'))
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('form', array(
+        'type' => 'boolean_checkbox',
+        'weight' => 3,
+        'settings' => array(
+          'display_label' => TRUE,
+        ),
+      ))
+      ->setDefaultValue(TRUE)
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['expiry'] = BaseFieldDefinition::create('timestamp')
+      ->setLabel(t('Expiry'))
+      ->setDescription(t('The license expiration date and time.'))
+      // @todo Make the default value configurable
+      ->setDefaultValue(date('Y-m-d', strtotime('+1 month')))
+      ->setDisplayOptions('form', array(
+        'type' => 'datetime_default',
+        'weight' => 4,
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['status'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Publishing status'))
-      ->setDescription(t('A boolean indicating whether the License entity is published.'))
-      ->setDefaultValue(TRUE);
+    $fields['licensed_entity_id'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Licensed entity'))
+      ->setDescription(t('The entity to which this license grants the owner access.'))
+      ->setRevisionable(TRUE)
+      // @todo Make this configurable on the entity type form.
+      ->setSetting('target_type', 'node')
+      ->setSetting('handler', 'default')
+      ->setTranslatable(TRUE)
+      ->setRequired(TRUE)
+      ->setDisplayOptions('view', array(
+        'label' => 'hidden',
+        'type' => 'author',
+        'weight' => 1,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 1,
+        'settings' => array(
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ),
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
