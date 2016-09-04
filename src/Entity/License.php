@@ -10,35 +10,35 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\user\UserInterface;
 
 /**
- * Defines the License entity entity.
+ * Defines the License entity.
  *
  * @ingroup license
  *
  * @ContentEntityType(
- *   id = "license_entity",
- *   label = @Translation("License entity"),
- *   bundle_label = @Translation("License entity type"),
+ *   id = "license",
+ *   label = @Translation("License"),
+ *   bundle_label = @Translation("License type"),
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\license\LicenseEntityListBuilder",
- *     "views_data" = "Drupal\license\Entity\LicenseEntityViewsData",
- *     "translation" = "Drupal\license\LicenseEntityTranslationHandler",
+ *     "list_builder" = "Drupal\license\LicenseListBuilder",
+ *     "views_data" = "Drupal\license\Entity\LicenseViewsData",
+ *     "translation" = "Drupal\license\LicenseTranslationHandler",
  *
  *     "form" = {
- *       "default" = "Drupal\license\Form\LicenseEntityForm",
- *       "add" = "Drupal\license\Form\LicenseEntityForm",
- *       "edit" = "Drupal\license\Form\LicenseEntityForm",
- *       "delete" = "Drupal\license\Form\LicenseEntityDeleteForm",
+ *       "default" = "Drupal\license\Form\LicenseForm",
+ *       "add" = "Drupal\license\Form\LicenseForm",
+ *       "edit" = "Drupal\license\Form\LicenseForm",
+ *       "delete" = "Drupal\license\Form\LicenseDeleteForm",
  *     },
- *     "access" = "Drupal\license\LicenseEntityAccessControlHandler",
+ *     "access" = "Drupal\license\LicenseAccessControlHandler",
  *     "route_provider" = {
- *       "html" = "Drupal\license\LicenseEntityHtmlRouteProvider",
+ *       "html" = "Drupal\license\LicenseHtmlRouteProvider",
  *     },
  *   },
- *   base_table = "license_entity",
- *   data_table = "license_entity_field_data",
+ *   base_table = "license",
+ *   data_table = "license_field_data",
  *   translatable = TRUE,
-  *   admin_permission = "administer license entity entities",
+  *   admin_permission = "administer license entities",
  *   entity_keys = {
  *     "id" = "id",
  *     "bundle" = "type",
@@ -49,18 +49,18 @@ use Drupal\user\UserInterface;
  *     "status" = "status",
  *   },
  *   links = {
- *     "canonical" = "/admin/structure/license_entity/{license_entity}",
- *     "add-page" = "/admin/structure/license_entity/add",
- *     "add-form" = "/admin/structure/license_entity/add/{license_entity_type}",
- *     "edit-form" = "/admin/structure/license_entity/{license_entity}/edit",
- *     "delete-form" = "/admin/structure/license_entity/{license_entity}/delete",
- *     "collection" = "/admin/structure/license_entity",
+ *     "canonical" = "/admin/structure/license/{license}",
+ *     "add-page" = "/admin/structure/license/add",
+ *     "add-form" = "/admin/structure/license/add/{license_type}",
+ *     "edit-form" = "/admin/structure/license/{license}/edit",
+ *     "delete-form" = "/admin/structure/license/{license}/delete",
+ *     "collection" = "/admin/structure/license",
  *   },
- *   bundle_entity_type = "license_entity_type",
- *   field_ui_base_route = "entity.license_entity_type.edit_form"
+ *   bundle_entity_type = "license_type",
+ *   field_ui_base_route = "entity.license_type.edit_form"
  * )
  */
-class LicenseEntity extends ContentEntityBase implements LicenseEntityInterface {
+class License extends ContentEntityBase implements LicenseInterface {
 
   use EntityChangedTrait;
 
@@ -164,7 +164,7 @@ class LicenseEntity extends ContentEntityBase implements LicenseEntityInterface 
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
-      ->setDescription(t('The name of the License entity entity.'))
+      ->setDescription(t('The name of the License entity.'))
       ->setSettings(array(
         'max_length' => 50,
         'text_processing' => 0,
@@ -245,6 +245,7 @@ class LicenseEntity extends ContentEntityBase implements LicenseEntityInterface 
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    // @todo Display this field conditionally.
     $fields['expiry'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('Expiry'))
       ->setDescription(t('The license expiration date and time.'))

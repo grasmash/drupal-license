@@ -1,17 +1,17 @@
-# License entity routing definition
-entity.license_entity.canonical:
-  route_name: entity.license_entity.canonical
-  base_route: entity.license_entity.canonical
+# License routing definition
+entity.license.canonical:
+  route_name: entity.license.canonical
+  base_route: entity.license.canonical
   title: 'View'
 
-entity.license_entity.edit_form:
-  route_name: entity.license_entity.edit_form
-  base_route: entity.license_entity.canonical
+entity.license.edit_form:
+  route_name: entity.license.edit_form
+  base_route: entity.license.canonical
   title: Edit
 
-entity.license_entity.delete_form:
-  route_name:  entity.license_entity.delete_form
-  base_route:  entity.license_entity.canonical
+entity.license.delete_form:
+  route_name:  entity.license.delete_form
+  base_route:  entity.license.canonical
   title: Delete
   weight: 10
 

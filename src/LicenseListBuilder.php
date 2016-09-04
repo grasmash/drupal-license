@@ -8,11 +8,11 @@ use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\Core\Url;
 
 /**
- * Defines a class to build a listing of License entity entities.
+ * Defines a class to build a listing of License entities.
  *
  * @ingroup license
  */
-class LicenseEntityListBuilder extends EntityListBuilder {
+class LicenseListBuilder extends EntityListBuilder {
 
   use LinkGeneratorTrait;
 
@@ -20,7 +20,7 @@ class LicenseEntityListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['id'] = $this->t('License entity ID');
+    $header['id'] = $this->t('License ID');
     $header['name'] = $this->t('Name');
     return $header + parent::buildHeader();
   }
@@ -29,13 +29,13 @@ class LicenseEntityListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var $entity \Drupal\license\Entity\LicenseEntity */
+    /* @var $entity \Drupal\license\Entity\License */
     $row['id'] = $entity->id();
     $row['name'] = $this->l(
       $entity->label(),
       new Url(
-        'entity.license_entity.edit_form', array(
-          'license_entity' => $entity->id(),
+        'entity.license.edit_form', array(
+          'license' => $entity->id(),
         )
       )
     );

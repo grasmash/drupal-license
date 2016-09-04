@@ -2,9 +2,9 @@
 
 /**
  * @file
- * Contains license_entity.page.inc.
+ * Contains license.page.inc.
  *
- * Page callback for License entity entities.
+ * Page callback for License entities.
  */
 
 use Drupal\Core\Render\Element;
@@ -12,18 +12,18 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
- * Prepares variables for License entity templates.
+ * Prepares variables for License templates.
  *
- * Default template: license_entity.html.twig.
+ * Default template: license.html.twig.
  *
  * @param array $variables
  *   An associative array containing:
  *   - elements: An associative array containing the user information and any
  *   - attributes: HTML attributes for the containing element.
  */
-function template_preprocess_license_entity(array &$variables) {
-  // Fetch LicenseEntity Entity Object.
-  $license_entity = $variables['elements']['#license_entity'];
+function template_preprocess_license(array &$variables) {
+  // Fetch License Object.
+  $license = $variables['elements']['#license'];
 
   // Helpful $content variable for templates.
   foreach (Element::children($variables['elements']) as $key) {

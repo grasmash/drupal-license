@@ -1,22 +1,22 @@
-add license entity entities:
-  title: 'Create new License entity entities'
+add license entities:
+  title: 'Create new License entities'
 
-administer license entity entities:
-  title: 'Administer License entity entities'
-  description: 'Allow to access the administration form to configure License entity entities.'
+administer license entities:
+  title: 'Administer License entities'
+  description: 'Allow to access the administration form to configure License entities.'
   restrict access: true
 
-delete license entity entities:
-  title: 'Delete License entity entities'
+delete license entities:
+  title: 'Delete License entities'
 
-edit license entity entities:
-  title: 'Edit License entity entities'
+edit license entities:
+  title: 'Edit License entities'
 
-access license entity overview:
-  title: 'Access the License entity overview page'
+access license overview:
+  title: 'Access the License overview page'
 
-view published license entity entities:
-  title: 'View published License entity entities'
+view published license entities:
+  title: 'View published License entities'
 
-view unpublished license entity entities:
-  title: 'View unpublished License entity entities'
+view unpublished license entities:
+  title: 'View unpublished License entities'

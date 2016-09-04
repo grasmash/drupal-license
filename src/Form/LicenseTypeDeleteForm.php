@@ -7,9 +7,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Builds the form to delete License entity type entities.
+ * Builds the form to delete License type entities.
  */
-class LicenseEntityTypeDeleteForm extends EntityConfirmFormBase {
+class LicenseTypeDeleteForm extends EntityConfirmFormBase {
 
   /**
    * {@inheritdoc}
@@ -22,7 +22,7 @@ class LicenseEntityTypeDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.license_entity_type.collection');
+    return new Url('entity.license_type.collection');
   }
 
   /**

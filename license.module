@@ -26,7 +26,7 @@ function license_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.license':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Provides license entity type, which may be used to control user access to other entities.') . '</p>';
+      $output .= '<p>' . t('Provides license type, which may be used to control user access to other entities.') . '</p>';
       return $output;
 
     default:
@@ -38,15 +38,15 @@ function license_help($route_name, RouteMatchInterface $route_match) {
  */
 function license_theme() {
   $theme = [];
-  $theme['license_entity'] = array(
+  $theme['license'] = array(
     'render element' => 'elements',
-    'file' => 'license_entity.page.inc',
-    'template' => 'license_entity',
+    'file' => 'license.page.inc',
+    'template' => 'license',
   );
-  $theme['license_entity_content_add_list'] = [
+  $theme['license_content_add_list'] = [
     'render element' => 'content',
     'variables' => ['content' => NULL],
-    'file' => 'license_entity.page.inc',
+    'file' => 'license.page.inc',
   ];
   return $theme;
 }
@@ -54,15 +54,17 @@ function license_theme() {
 /**
 * Implements hook_theme_suggestions_HOOK().
 */
-function license_theme_suggestions_license_entity(array $variables) {
+function license_theme_suggestions_license(array $variables) {
   $suggestions = array();
-  $entity = $variables['elements']['#license_entity'];
+  $entity = $variables['elements']['#license'];
   $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
 
-  $suggestions[] = 'license_entity__' . $sanitized_view_mode;
-  $suggestions[] = 'license_entity__' . $entity->bundle();
-  $suggestions[] = 'license_entity__' . $entity->bundle() . '__' . $sanitized_view_mode;
-  $suggestions[] = 'license_entity__' . $entity->id();
-  $suggestions[] = 'license_entity__' . $entity->id() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'license__' . $sanitized_view_mode;
+  $suggestions[] = 'license__' . $entity->bundle();
+  $suggestions[] = 'license__' . $entity->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'license__' . $entity->id();
+  $suggestions[] = 'license__' . $entity->id() . '__' . $sanitized_view_mode;
   return $suggestions;
 }
+
+// @todo Implement cron job to find active licenses after expiry date and change their status to expired.

@@ -6,13 +6,13 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class LicenseEntitySettingsForm.
+ * Class LicenseSettingsForm.
  *
  * @package Drupal\license\Form
  *
  * @ingroup license
  */
-class LicenseEntitySettingsForm extends FormBase {
+class LicenseSettingsForm extends FormBase {
 
   /**
    * Returns a unique string identifying the form.
@@ -21,7 +21,7 @@ class LicenseEntitySettingsForm extends FormBase {
    *   The unique string identifying the form.
    */
   public function getFormId() {
-    return 'LicenseEntity_settings';
+    return 'License_settings';
   }
 
   /**
@@ -37,7 +37,7 @@ class LicenseEntitySettingsForm extends FormBase {
   }
 
   /**
-   * Defines the settings form for License entity entities.
+   * Defines the settings form for License entities.
    *
    * @param array $form
    *   An associative array containing the structure of the form.
@@ -48,7 +48,7 @@ class LicenseEntitySettingsForm extends FormBase {
    *   Form definition array.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['LicenseEntity_settings']['#markup'] = 'Settings form for License entity entities. Manage field settings here.';
+    $form['License_settings']['#markup'] = 'Settings form for License entities. Manage field settings here.';
     return $form;
   }
 

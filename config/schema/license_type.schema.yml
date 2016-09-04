@@ -1,6 +1,6 @@
-license.license_entity_type.*:
+license.license_type.*:
   type: config_entity
-  label: 'License entity type config'
+  label: 'License type config'
   mapping:
     id:
       type: string

@@ -1,16 +1,16 @@
-# License entity menu items definition
-entity.license_entity.collection:
+# License menu items definition
+entity.license.collection:
   title: 'Licenses'
-  route_name: entity.license_entity.collection
+  route_name: entity.license.collection
   description: 'List License entities'
   parent: system.admin_structure
   weight: 100
 
-# License entity type menu items definition
-entity.license_entity_type.collection:
+# License type menu items definition
+entity.license_type.collection:
   title: 'License types'
-  route_name: entity.license_entity_type.collection
-  description: 'List License entity types (bundles)'
+  route_name: entity.license_type.collection
+  description: 'List License types (bundles)'
   parent: system.admin_structure
   weight: 99
 

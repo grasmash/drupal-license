@@ -6,17 +6,17 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Form controller for License entity edit forms.
+ * Form controller for License edit forms.
  *
  * @ingroup license
  */
-class LicenseEntityForm extends ContentEntityForm {
+class LicenseForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    /* @var $entity \Drupal\license\Entity\LicenseEntity */
+    /* @var $entity \Drupal\license\Entity\License */
     $form = parent::buildForm($form, $form_state);
     $entity = $this->entity;
 
@@ -32,17 +32,17 @@ class LicenseEntityForm extends ContentEntityForm {
 
     switch ($status) {
       case SAVED_NEW:
-        drupal_set_message($this->t('Created the %label License entity.', [
+        drupal_set_message($this->t('Created the %label License.', [
           '%label' => $entity->label(),
         ]));
         break;
 
       default:
-        drupal_set_message($this->t('Saved the %label License entity.', [
+        drupal_set_message($this->t('Saved the %label License.', [
           '%label' => $entity->label(),
         ]));
     }
-    $form_state->setRedirect('entity.license_entity.canonical', ['license_entity' => $entity->id()]);
+    $form_state->setRedirect('entity.license.canonical', ['license' => $entity->id()]);
   }
 
 }

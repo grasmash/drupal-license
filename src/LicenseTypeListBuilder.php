@@ -6,15 +6,15 @@ use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Provides a listing of License entity type entities.
+ * Provides a listing of License type entities.
  */
-class LicenseEntityTypeListBuilder extends ConfigEntityListBuilder {
+class LicenseTypeListBuilder extends ConfigEntityListBuilder {
 
   /**
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = $this->t('License entity type');
+    $header['label'] = $this->t('License type');
     $header['id'] = $this->t('Machine name');
     return $header + parent::buildHeader();
   }

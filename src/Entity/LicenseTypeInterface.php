@@ -5,9 +5,9 @@ namespace Drupal\license\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
- * Provides an interface for defining License entity type entities.
+ * Provides an interface for defining License type entities.
  */
-interface LicenseEntityTypeInterface extends ConfigEntityInterface {
+interface LicenseTypeInterface extends ConfigEntityInterface {
 
   // Add get/set methods for your configuration properties here.
 }

@@ -5,9 +5,9 @@ namespace Drupal\license;
 use Drupal\content_translation\ContentTranslationHandler;
 
 /**
- * Defines the translation handler for license_entity.
+ * Defines the translation handler for license.
  */
-class LicenseEntityTranslationHandler extends ContentTranslationHandler {
+class LicenseTranslationHandler extends ContentTranslationHandler {
 
   // Override here the needed methods from ContentTranslationHandler.
 
