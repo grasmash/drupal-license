@@ -8,6 +8,7 @@
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Access\AccessResult;
 
 // License statuses.
 define('LICENSE_CREATED', 0);
@@ -52,8 +53,8 @@ function license_theme() {
 }
 
 /**
-* Implements hook_theme_suggestions_HOOK().
-*/
+ * Implements hook_theme_suggestions_HOOK().
+ */
 function license_theme_suggestions_license(array $variables) {
   $suggestions = array();
   $entity = $variables['elements']['#license'];
@@ -74,25 +75,37 @@ function license_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $ope
   switch ($operation) {
     case 'view':
 
-      /** @var Drupal\Core\Entity\EntityTypeBundleInfo $bundle_info_service */
-      $bundle_info_service = \Drupal::service('entity_type.bundle.info');
-      $license_bundle_info = $bundle_info_service->getBundleInfo('license');
-      $license_type_keys = array_keys($license_bundle_info);
-
-      // Check if current entity should be restricted by any license type.
-      foreach ($license_type_keys as $license_type_key) {
-        $license_type = $bundle_info_service->getBundleInfo($license_type_key);
+      $control_access = FALSE;
+      $license_types = \Drupal::entityTypeManager()->getStorage('license_type')->loadMultiple();
+      foreach ($license_types as $license_type) {
         $target_entity_type = $license_type->get('target_entity_type');
-        $target_bundles = $license_type->get('target_bundles');
-
         if ($entity->getEntityTypeId() == $target_entity_type) {
-          // If entity should be restricted by this license type, compare bundles.
-          if (in_array($entity->bundle(), $target_bundles)) {
-            // Check access!
-            return AccessResult::allowedIf($license_type->userCanViewLicensedEntity($account, $entity));
+          $control_access = TRUE;
+          break;
+        }
+      }
 
+      if ($control_access) {
+        $licenses = \Drupal::entityTypeManager()
+          ->getStorage('license')
+          ->loadByProperties(['user_id' => $account->id()]);
+        /** @var \Drupal\Core\Entity\FieldableEntityInterface $license */
+        foreach ($licenses as $license) {
+          foreach ($license->get('licensed_entity') as $licensed_entity) {
+            if ($licensed_entity->entity->id() == $entity->id()) {
+              // if this doesn't work try $license->get('licensed_entity')->value() and possibly $license->get('licensed_entity')->value()->id().
+              // Add cachebility.
+              // Add check for isActive().
+              $access = AccessResult::allowed();
+              $access->addCacheTags([$license->getCacheTags()]);
+              return $access;
+            }
           }
         }
+        // Add cachebility.
+        $access = AccessResult::forbidden();
+        $access->addCacheTags([$license->getCacheTags()]);
+        return $access;
       }
   }
 

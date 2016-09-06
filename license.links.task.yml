@@ -15,3 +15,8 @@ entity.license.delete_form:
   title: Delete
   weight: 10
 
+entity.license.collection:
+  route_name: entity.license.collection
+  base_route: system.admin_content
+  title: Licenses
+  weight: 10
