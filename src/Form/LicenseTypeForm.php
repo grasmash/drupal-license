@@ -37,7 +37,40 @@ class LicenseTypeForm extends EntityForm {
       '#disabled' => !$license_type->isNew(),
     ];
 
-    /* You will need additional form elements for your custom properties. */
+    $target_entity_type = $license_type->get('target_entity_type');
+    // @todo Make this more accurate. It might not have data.
+    $has_data = (bool) $target_entity_type;
+    $form['target_entity_type'] = array(
+      '#type' => 'select',
+      '#title' => t('Type of entity that can be licensed'),
+      '#description' => t('Once you have selected an entity type, it cannot be changed!'),
+      '#options' => \Drupal::entityManager()->getEntityTypeLabels(TRUE),
+      '#default_value' => $license_type->get('target_entity_type'),
+      '#required' => TRUE,
+      // Disable if a license has already been created.
+      '#disabled' => $has_data,
+      '#size' => 1,
+    );
+
+    if ($has_data){
+      $bundles = \Drupal::entityManager()->getBundleInfo($target_entity_type);
+      $options = [];
+      foreach ($bundles as $bundle_machine_name => $values) {
+        // The label does not need sanitizing since it is used as an optgroup
+        // which is only supported by select elements and auto-escaped.
+        $bundle_label = (string) $values['label'];
+        $options[$bundle_machine_name] = $bundle_label;
+      }
+
+      $form['target_bundles'] = array(
+        '#type' => 'checkboxes',
+        '#title' => t('@target_entity_type bundles that can be licensed', ['@target_entity_type' => ucfirst($target_entity_type)]),
+        '#options' => $options,
+        '#default_value' => $license_type->get('target_bundles') ? $license_type->get('target_bundles') : [],
+        '#required' => TRUE,
+        '#size' => 1,
+      );
+    }
 
     return $form;
   }

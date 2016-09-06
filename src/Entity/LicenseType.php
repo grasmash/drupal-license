@@ -22,6 +22,13 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *     },
  *   },
  *   config_prefix = "license_type",
+ *   config_export = {
+ *     "id",
+ *     "uuid",
+ *     "label",
+ *     "target_bundles",
+ *     "target_entity_type"
+ *   },
  *   admin_permission = "administer site configuration",
  *   bundle_of = "license",
  *   entity_keys = {

@@ -49,12 +49,12 @@ use Drupal\user\UserInterface;
  *     "status" = "status",
  *   },
  *   links = {
- *     "canonical" = "/admin/structure/license/{license}",
- *     "add-page" = "/admin/structure/license/add",
- *     "add-form" = "/admin/structure/license/add/{license_type}",
- *     "edit-form" = "/admin/structure/license/{license}/edit",
- *     "delete-form" = "/admin/structure/license/{license}/delete",
- *     "collection" = "/admin/structure/license",
+ *     "canonical" = "/admin/content/license/{license}",
+ *     "add-page" = "/admin/content/license/add",
+ *     "add-form" = "/admin/content/license/add/{license_type}",
+ *     "edit-form" = "/admin/content/license/{license}/edit",
+ *     "delete-form" = "/admin/content/license/{license}/delete",
+ *     "collection" = "/admin/content/license",
  *   },
  *   bundle_entity_type = "license_type",
  *   field_ui_base_route = "entity.license_type.edit_form"
@@ -258,12 +258,10 @@ class License extends ContentEntityBase implements LicenseInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['licensed_entity_id'] = BaseFieldDefinition::create('entity_reference')
+    $fields['licensed_entity'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Licensed entity'))
       ->setDescription(t('The entity to which this license grants the owner access.'))
       ->setRevisionable(TRUE)
-      // @todo Make this configurable on the entity type form.
-      ->setSetting('target_type', 'node')
       ->setSetting('handler', 'default')
       ->setTranslatable(TRUE)
       ->setRequired(TRUE)
@@ -294,6 +292,21 @@ class License extends ContentEntityBase implements LicenseInterface {
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the entity was last edited.'));
 
+    return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+    $fields = [];
+    if ($license_type = LicenseType::load($bundle)) {
+        $fields['licensed_entity'] = clone $base_field_definitions['licensed_entity'];
+        $fields['licensed_entity']->setSetting('target_type', $license_type->get('target_entity_type'));
+        $fields['licensed_entity']->setSetting('handler_settings', [
+          'target_bundles' => $license_type->get('target_bundles'),
+        ]);
+    }
     return $fields;
   }
 
