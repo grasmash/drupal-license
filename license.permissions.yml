@@ -15,8 +15,8 @@ edit license entities:
 access license overview:
   title: 'Access the License overview page'
 
-view published license entities:
-  title: 'View published License entities'
+view own license entities:
+  title: 'View own License entities'
 
-view unpublished license entities:
-  title: 'View unpublished License entities'
+view license entities:
+  title: 'View any License entities'

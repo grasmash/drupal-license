@@ -29,7 +29,8 @@ use Drupal\user\UserInterface;
  *     "uuid",
  *     "label",
  *     "target_bundles",
- *     "target_entity_type"
+ *     "target_entity_type",
+ *     "roles"
  *   },
  *   admin_permission = "administer site configuration",
  *   bundle_of = "license",
@@ -62,15 +63,4 @@ class LicenseType extends ConfigEntityBundleBase implements LicenseTypeInterface
    * @var string
    */
   protected $label;
-
-  public function userCanViewLicensedEntity(UserInterface $account, EntityInterface $entity) {
-    $entity_query = \Drupal::entityQuery('license')
-      ->condition('uid', $account->id())
-      ->condition('licensed_entity.target_id', $entity->id())
-      ->condition('status', LICENSE_ACTIVE);
-    $eids = $entity_query->execute();
-
-    return (bool) $eids;
-  }
-
 }

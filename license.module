@@ -79,7 +79,8 @@ function license_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $ope
       $license_types = \Drupal::entityTypeManager()->getStorage('license_type')->loadMultiple();
       foreach ($license_types as $license_type) {
         $target_entity_type = $license_type->get('target_entity_type');
-        if ($entity->getEntityTypeId() == $target_entity_type) {
+        if ($entity->getEntityTypeId() == $target_entity_type
+          && (empty($license_type->get('roles')) || array_intersect($account->getRoles(), $license_type->get('roles')))) {
           $control_access = TRUE;
           break;
         }
@@ -88,24 +89,32 @@ function license_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $ope
       if ($control_access) {
         $licenses = \Drupal::entityTypeManager()
           ->getStorage('license')
-          ->loadByProperties(['user_id' => $account->id()]);
-        /** @var \Drupal\Core\Entity\FieldableEntityInterface $license */
+          ->loadByProperties([
+            'user_id' => $account->id(),
+            'licensed_entity' => $entity->id(),
+          ]);
         foreach ($licenses as $license) {
-          foreach ($license->get('licensed_entity') as $licensed_entity) {
-            if ($licensed_entity->entity->id() == $entity->id()) {
-              // if this doesn't work try $license->get('licensed_entity')->value() and possibly $license->get('licensed_entity')->value()->id().
-              // Add cachebility.
-              // Add check for isActive().
-              $access = AccessResult::allowed();
-              $access->addCacheTags([$license->getCacheTags()]);
-              return $access;
-            }
+          if ($license->isActive()) {
+            $access = AccessResult::allowed();
+            //$access->addCacheTags([$license->getCacheTags()]);
+
+            return $access;
           }
         }
-        // Add cachebility.
-        $access = AccessResult::forbidden();
-        $access->addCacheTags([$license->getCacheTags()]);
-        return $access;
+
+//        /** @var \Drupal\Core\Entity\FieldableEntityInterface $license */
+//        foreach ($licenses as $license) {
+//          foreach ($license->get('licensed_entity') as $licensed_entity) {
+//            if ($licensed_entity->entity->id() == $entity->id()) {
+//              $access = AccessResult::allowedIf($license->isActive());
+//              $access->addCacheTags([$license->getCacheTags()]);
+//              return $access;
+//            }
+//          }
+//        }
+
+        // @todo Add cachebility.
+        return AccessResult::forbidden();
       }
   }
 

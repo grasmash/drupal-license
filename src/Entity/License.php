@@ -45,8 +45,8 @@ use Drupal\user\UserInterface;
  *     "label" = "name",
  *     "uuid" = "uuid",
  *     "uid" = "user_id",
- *     "langcode" = "langcode",
- *     "status" = "status",
+ *     "status' = "published",
+ *     "langcode" = "langcode"
  *   },
  *   links = {
  *     "canonical" = "/content/license/{license}",
@@ -144,16 +144,20 @@ class License extends ContentEntityBase implements LicenseInterface {
   /**
    * {@inheritdoc}
    */
-  public function isPublished() {
-    return (bool) $this->getEntityKey('status');
+  public function getStatus() {
+    return $this->get('status')->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setPublished($published) {
-    $this->set('status', $published ? NODE_PUBLISHED : NODE_NOT_PUBLISHED);
+  public function setStatus($status) {
+    $this->set('status', $status);
     return $this;
+  }
+
+  public function isActive() {
+    return $this->getStatus() == LICENSE_ACTIVE;
   }
 
   /**
@@ -168,20 +172,7 @@ class License extends ContentEntityBase implements LicenseInterface {
       ->setSettings(array(
         'max_length' => 50,
         'text_processing' => 0,
-      ))
-      ->setRequired(TRUE)
-      ->setDefaultValue('')
-      ->setDisplayOptions('view', array(
-        'label' => 'above',
-        'type' => 'string',
-        'weight' => 0,
-      ))
-      ->setDisplayOptions('form', array(
-        'type' => 'string_textfield',
-        'weight' => 0,
-      ))
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
+      ));
 
     $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Owner'))
@@ -301,13 +292,30 @@ class License extends ContentEntityBase implements LicenseInterface {
   public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     $fields = [];
     if ($license_type = LicenseType::load($bundle)) {
-        $fields['licensed_entity'] = clone $base_field_definitions['licensed_entity'];
-        $fields['licensed_entity']->setSetting('target_type', $license_type->get('target_entity_type'));
+      $fields['licensed_entity'] = clone $base_field_definitions['licensed_entity'];
+
+      $target_type = $license_type->get('target_entity_type') ? $license_type->get('target_entity_type') : 'node';
+      $fields['licensed_entity']->setSetting('target_type', $target_type);
+
+      $target_bundles = $license_type->get('target_bundles') ? $license_type->get('target_bundles') : [];
+      if ($target_bundles) {
         $fields['licensed_entity']->setSetting('handler_settings', [
           'target_bundles' => $license_type->get('target_bundles'),
         ]);
+      }
+
     }
     return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageInterface $storage) {
+    // @todo Find a better convention for naming licenses.
+    $this->setName($this->id());
+
+    parent::preSave($storage);
   }
 
 }

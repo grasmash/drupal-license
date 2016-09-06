@@ -61,25 +61,4 @@ interface LicenseInterface extends ContentEntityInterface, EntityChangedInterfac
    */
   public function setCreatedTime($timestamp);
 
-  /**
-   * Returns the License published status indicator.
-   *
-   * Unpublished License are only visible to restricted users.
-   *
-   * @return bool
-   *   TRUE if the License is published.
-   */
-  public function isPublished();
-
-  /**
-   * Sets the published status of a License.
-   *
-   * @param bool $published
-   *   TRUE to set this License to published, FALSE to set it to unpublished.
-   *
-   * @return \Drupal\license\Entity\LicenseInterface
-   *   The called License entity.
-   */
-  public function setPublished($published);
-
 }

@@ -21,10 +21,10 @@ class LicenseAccessControlHandler extends EntityAccessControlHandler {
     /** @var \Drupal\license\Entity\LicenseInterface $entity */
     switch ($operation) {
       case 'view':
-        if (!$entity->isPublished()) {
-          return AccessResult::allowedIfHasPermission($account, 'view unpublished license entities');
+        if ($entity->getOwnerId() == $account->id()) {
+          return AccessResult::allowedIfHasPermission($account, 'view own license entities');
         }
-        return AccessResult::allowedIfHasPermission($account, 'view published license entities');
+        return AccessResult::allowedIfHasPermission($account, 'view any license entities');
 
       case 'update':
         return AccessResult::allowedIfHasPermission($account, 'edit license entities');

@@ -65,12 +65,27 @@ class LicenseTypeForm extends EntityForm {
       $form['target_bundles'] = array(
         '#type' => 'checkboxes',
         '#title' => t('@target_entity_type bundles that can be licensed', ['@target_entity_type' => ucfirst($target_entity_type)]),
+        '#description' => t('This value only affects new licenses. It will not change existing licenses.'),
         '#options' => $options,
         '#default_value' => $license_type->get('target_bundles') ? $license_type->get('target_bundles') : [],
         '#required' => TRUE,
         '#size' => 1,
       );
     }
+
+    /** @var \Drupal\user\RoleInterface[] $roles */
+    $roles = user_roles(TRUE);
+    $role_options = [];
+    foreach ($roles as $rid => $role) {
+      $role_options[$rid] = $role->label();
+    }
+    $form['roles'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Restricted roles'),
+      '#description' => t('Roles whose entity access are restricted by license ownership. If no roles are selected, all roles will be restricted.'),
+      '#options' => $role_options,
+      '#default_value' => $license_type->get('roles') ? $license_type->get('roles') : array(),
+    );
 
     return $form;
   }
