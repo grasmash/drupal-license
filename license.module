@@ -72,6 +72,19 @@ function license_theme_suggestions_license(array $variables) {
  * Implements hook_entity_access();
  */
 function license_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+//  switch($operation) {
+//    case 'view':
+//      $licenses = \Drupal::entityTypeManager()->getStorage('license')->loadByProperties(['uid' => $account->id(), 'plugin_id' => 'entity_access']);
+//      foreach ($licenses as $license) {
+//        /** @var \Drupal\Core\Plugin\ContextAwarePluginInterface $plugin */
+//        $plugin = $license->getPlugin();
+//        $plugin->setContext('license', $license);
+//        if ($plugin->applies([$entity, $operation])) {
+//          return $plugin->access([$entity, $operation]);
+//        }
+//      }
+//  }
+
   switch ($operation) {
     case 'view':
 

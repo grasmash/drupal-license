@@ -19,6 +19,7 @@ class LicenseForm extends ContentEntityForm {
     /* @var $entity \Drupal\license\Entity\License */
     $form = parent::buildForm($form, $form_state);
     $entity = $this->entity;
+    //$form = $entity->getPlugin()->buildConfigurationForm($form, $form_state);
 
     return $form;
   }
