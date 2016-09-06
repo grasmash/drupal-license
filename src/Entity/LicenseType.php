@@ -3,6 +3,8 @@
 namespace Drupal\license\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Defines the License type entity.
@@ -60,5 +62,15 @@ class LicenseType extends ConfigEntityBundleBase implements LicenseTypeInterface
    * @var string
    */
   protected $label;
+
+  public function userCanViewLicensedEntity(UserInterface $account, EntityInterface $entity) {
+    $entity_query = \Drupal::entityQuery('license')
+      ->condition('uid', $account->id())
+      ->condition('licensed_entity.target_id', $entity->id())
+      ->condition('status', LICENSE_ACTIVE);
+    $eids = $entity_query->execute();
+
+    return (bool) $eids;
+  }
 
 }

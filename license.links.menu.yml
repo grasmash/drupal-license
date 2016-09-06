@@ -3,7 +3,7 @@ entity.license.collection:
   title: 'Licenses'
   route_name: entity.license.collection
   description: 'List License entities'
-  parent: system.admin_structure
+  parent: system.admin_content
   weight: 100
 
 # License type menu items definition
