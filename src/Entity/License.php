@@ -45,7 +45,7 @@ use Drupal\user\UserInterface;
  *     "label" = "name",
  *     "uuid" = "uuid",
  *     "uid" = "user_id",
- *     "status' = "published",
+ *     "status" = "published",
  *     "langcode" = "langcode"
  *   },
  *   links = {

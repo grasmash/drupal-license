@@ -93,28 +93,19 @@ function license_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $ope
             'user_id' => $account->id(),
             'licensed_entity' => $entity->id(),
           ]);
+        /** @var \Drupal\Core\Entity\EntityInterface $license */
         foreach ($licenses as $license) {
           if ($license->isActive()) {
             $access = AccessResult::allowed();
-            //$access->addCacheTags([$license->getCacheTags()]);
+            $access->addCacheTags($license->getCacheTags());
 
             return $access;
           }
         }
 
-//        /** @var \Drupal\Core\Entity\FieldableEntityInterface $license */
-//        foreach ($licenses as $license) {
-//          foreach ($license->get('licensed_entity') as $licensed_entity) {
-//            if ($licensed_entity->entity->id() == $entity->id()) {
-//              $access = AccessResult::allowedIf($license->isActive());
-//              $access->addCacheTags([$license->getCacheTags()]);
-//              return $access;
-//            }
-//          }
-//        }
-
-        // @todo Add cachebility.
-        return AccessResult::forbidden();
+        $access = AccessResult::forbidden();
+        $access->addCacheTags($license->getCacheTags());
+        return $access;
       }
   }
 
