@@ -2,6 +2,8 @@
 
 namespace Drupal\license\Form;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -48,30 +50,33 @@ class LicenseTypeForm extends EntityForm {
       '#default_value' => $license_type->get('target_entity_type'),
       '#required' => TRUE,
       // Disable if a license has already been created.
-      '#disabled' => $has_data,
+      //'#disabled' => $has_data,
       '#size' => 1,
+      '#ajax' => array(
+        'callback' => array($this, 'bundlesAjaxCallback'),
+        'effect' => 'fade',
+        'event' => 'change',
+        'progress' => array(
+          'type' => 'throbber',
+          'message' => NULL,
+        ),
+      ),
     );
 
-    if ($has_data){
-      $bundles = \Drupal::entityManager()->getBundleInfo($target_entity_type);
-      $options = [];
-      foreach ($bundles as $bundle_machine_name => $values) {
-        // The label does not need sanitizing since it is used as an optgroup
-        // which is only supported by select elements and auto-escaped.
-        $bundle_label = (string) $values['label'];
-        $options[$bundle_machine_name] = $bundle_label;
-      }
-
-      $form['target_bundles'] = array(
-        '#type' => 'checkboxes',
-        '#title' => t('@target_entity_type bundles that can be licensed', ['@target_entity_type' => ucfirst($target_entity_type)]),
-        '#description' => t('This value only affects new licenses. It will not change existing licenses.'),
-        '#options' => $options,
-        '#default_value' => $license_type->get('target_bundles') ? $license_type->get('target_bundles') : [],
-        '#required' => TRUE,
-        '#size' => 1,
-      );
-    }
+    $form['target_bundles'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Bundles that can be licensed'),
+      '#description' => t('This value only affects new licenses. It will not change existing licenses.'),
+      '#options' => !empty($target_entity_type) ? $this->getBundleOptions($target_entity_type) : [],
+      '#default_value' => $license_type->get('target_bundles') ? $license_type->get('target_bundles') : [],
+      '#required' => TRUE,
+      '#size' => 1,
+      '#states' => array(
+        'invisible' => array(
+          ':input[name="target_entity_type"]' => array('value' => ''),
+        ),
+      ),
+    );
 
     /** @var \Drupal\user\RoleInterface[] $roles */
     $roles = user_roles(TRUE);
@@ -88,6 +93,29 @@ class LicenseTypeForm extends EntityForm {
     );
 
     return $form;
+  }
+
+  public function getBundleOptions($entity_type) {
+    $bundles = \Drupal::entityManager()->getBundleInfo($entity_type);
+    $options = [];
+    foreach ($bundles as $bundle_machine_name => $values) {
+      // The label does not need sanitizing since it is used as an optgroup
+      // which is only supported by select elements and auto-escaped.
+      $bundle_label = (string) $values['label'];
+      $options[$bundle_machine_name] = $bundle_label;
+    }
+
+    return $options;
+  }
+
+  public function bundlesAjaxCallback(array &$form, FormStateInterface $form_state) {
+    $values = $form_state->getValues();
+    $target_entity_type = $values['target_entity_type'];
+    $form['target_bundle']['#options'] = $this->getBundleOptions($target_entity_type);
+    $response = new AjaxResponse();
+    $response->addCommand(new ReplaceCommand('#edit-target-bundles--wrapper', $form['target_bundles']));
+
+    return $response;
   }
 
   /**
