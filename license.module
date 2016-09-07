@@ -6,8 +6,6 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Access\AccessResult;
 
 // License statuses.
@@ -112,4 +110,22 @@ function license_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $ope
   return AccessResult::neutral();
 }
 
-// @todo Implement cron job to find active licenses after expiry date and change their status to expired.
+/**
+ * Implements hook_cron().
+ */
+function license_cron() {
+  $query = \Drupal::entityQuery('license');
+  $query->condition('status', LICENSE_EXPIRED, '!=')
+    ->condition('expires_automatically', '1')
+    ->condition('expiry', REQUEST_TIME, '<=');
+  if ($ids = $query->execute()) {
+    $licenses = \Drupal\license\Entity\License::loadMultiple($ids);
+
+    // @todo Queue this!
+    /** @var \Drupal\Core\Entity\EntityInterface $license */
+    foreach ($licenses as $license) {
+      $license->set('status', LICENSE_EXPIRED);
+      $license->save();
+    }
+  };
+}

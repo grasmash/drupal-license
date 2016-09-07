@@ -240,10 +240,8 @@ class License extends ContentEntityBase implements LicenseInterface {
     $fields['expiry'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('Expiry'))
       ->setDescription(t('The license expiration date and time.'))
-      // @todo Make the default value configurable
-      ->setDefaultValue(date('Y-m-d', strtotime('+1 month')))
       ->setDisplayOptions('form', array(
-        'type' => 'datetime_default',
+        'type' => 'datetime_timestamp',
         'weight' => 4,
       ))
       ->setDisplayConfigurable('form', TRUE)
